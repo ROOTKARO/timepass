@@ -1,7 +1,0 @@
-﻿services:
-  - type: worker
-    name: realme-telegram-bot
-    env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python telegram_realme_bot.py
-    autoDeploy: true
