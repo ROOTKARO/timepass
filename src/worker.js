@@ -2,17 +2,20 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.pathname === "/") {
+    if (url.pathname === "/" && request.method === "GET") {
       return new Response("Bot running", { status: 200 });
     }
 
-    // Allow GET check on webhook path (no redirect/404)
-    if (
-      request.method === "GET" &&
-      (url.pathname === "/webhook" || url.pathname === "/webhook/")
-    ) {
-      return new Response("webhook ok", { status: 200 });
+    // Telegram webhook on root
+    if (url.pathname === "/" && request.method === "POST") {
+      const update = await request.json();
+      await onUpdate(update, env);
+      return new Response("ok", { status: 200 });
     }
+
+    return new Response("not found", { status: 404 });
+  }
+};
 
     // Accept both /webhook and /webhook/
     if (
@@ -114,3 +117,4 @@ async function send(env, chatId, text) {
     body: JSON.stringify({ chat_id: chatId, text })
   });
 }
+
