@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 from typing import Any, Dict, List, Tuple
 
@@ -144,6 +144,7 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         DATA = normalized
         LAST_FILE_NAME = doc.file_name
         await update.message.reply_text(f"Loaded {len(DATA)} rows from {doc.file_name}.")
+        await update.message.reply_text("Thanks For Choosing RELAX TOOL -")
     except Exception as exc:
         await update.message.reply_text(f"Failed to parse JSON: {exc}")
 
