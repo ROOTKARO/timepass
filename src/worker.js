@@ -6,22 +6,7 @@ export default {
       return new Response("Bot running", { status: 200 });
     }
 
-    // Telegram webhook on root
     if (url.pathname === "/" && request.method === "POST") {
-      const update = await request.json();
-      await onUpdate(update, env);
-      return new Response("ok", { status: 200 });
-    }
-
-    return new Response("not found", { status: 404 });
-  }
-};
-
-    // Accept both /webhook and /webhook/
-    if (
-      request.method === "POST" &&
-      (url.pathname === "/webhook" || url.pathname === "/webhook/")
-    ) {
       const update = await request.json();
       await onUpdate(update, env);
       return new Response("ok", { status: 200 });
@@ -89,10 +74,7 @@ async function onUpdate(update, env) {
 
   const out = hits
     .slice(0, 20)
-    .map(
-      (r, i) =>
-        `${i + 1}) ${r.market_model} | ${r.project_no} | ${r.filename}\n${r.link || ""}`
-    )
+    .map((r, i) => `${i + 1}) ${r.market_model} | ${r.project_no} | ${r.filename}\n${r.link || ""}`)
     .join("\n\n");
 
   return send(env, chatId, out);
@@ -104,9 +86,7 @@ async function loadRows(env) {
 
   if (Array.isArray(raw)) return raw;
   if (Array.isArray(raw.realmeLinks)) return raw.realmeLinks;
-  for (const v of Object.values(raw || {})) {
-    if (Array.isArray(v)) return v;
-  }
+  for (const v of Object.values(raw || {})) if (Array.isArray(v)) return v;
   return [];
 }
 
@@ -117,4 +97,3 @@ async function send(env, chatId, text) {
     body: JSON.stringify({ chat_id: chatId, text })
   });
 }
-
